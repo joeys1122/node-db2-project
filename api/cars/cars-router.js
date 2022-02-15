@@ -1,7 +1,7 @@
 const Cars = require('./cars-model');
 const router = require('express').Router()
 
-const { checkCarId, checkCarPayload } = require('./cars-middleware');
+const { checkCarId, checkCarPayload, checkVinNumberValid, checkVinNumberUnique } = require('./cars-middleware');
 
 router.get('/', (req, res) => {
   Cars.getAll()
@@ -25,7 +25,7 @@ router.get('/:id', checkCarId, (req, res) => {
     });
 });
 
-router.post('/', checkCarPayload, (req, res) => {
+router.post('/', checkCarPayload, checkVinNumberValid, checkVinNumberUnique, (req, res) => {
   Cars.create(req.body)
     .then(car => {
       res.status(201).json(car);
